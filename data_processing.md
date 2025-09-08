@@ -5,6 +5,7 @@ Trim raw reads with TrimGalore
 - bearBlood_RNAseq_samples.tsv is a tab delimited with with the fastq name in column 1 and the path to the fastq file in column 2
 
 1. Trimming method 1 - setting quality to zero to run trimgalore
+Based on https://github.com/jokelley/H2Sexposure-expression/blob/master/linux_scripts.txt
 
 ```bash
 module load trimgalore
