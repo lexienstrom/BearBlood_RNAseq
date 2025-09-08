@@ -24,6 +24,7 @@ readDir=$(echo "${LINE}" | awk '{print $2}')
 
 trim_galore \
     --quality 0  \
+    --adapter GAAGAGCGTCGTGT \
     --cores "$SLURM_CPUS_PER_TASK" \
     --fastqc_args "--noextract --nogroup --outdir 1_trim/fastqc" \
     --stringency 5 \
