@@ -92,3 +92,21 @@ STAR \
     --outFileNamePrefix 2_STAR/mapped/"${fastq}_" \
     --outSAMtype BAM SortedByCoordinate
 ```
+
+# 3. Quantify gene-level read counts
+Use featureCounts from Subread
+```bash
+# Change to working directory
+cd /hb/groups/kelley_training/lexi/BearBlood_RNAseq || exit 1
+
+# Create output directory for STAR mapped files
+mkdir -p 3_featureCounts
+
+# Run featureCounts
+# Quanitfy gene-level read counts
+featureCounts -F 'GTF' -T 4 -t exon -g gene_id \
+    -G /hb/home/aenstrom/ursus_arctos_genome/GCF_023065955.2_UrsArc2.0_genomic.fna \
+    -a /hb/home/aenstrom/ursus_arctos_genome/GCF_023065955.2_UrsArc2.0_genomic.gtf \
+    -o 3_featureCounts/brownBear_Blood_RNAseq_featureCounts_output.txt \
+    2_STAR/mapped/*_Aligned.sortedByCoord.out.bam
+```
