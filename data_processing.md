@@ -29,7 +29,7 @@ readDir=$(echo "${LINE}" | awk '{print $2}')
 
 # Run Trim Galore for adapter and quality trimming, and FastQC for QC
 # --quality 0 - No quality trimming 
-# --stringency 5 - Minimum overlap for adapter trimming
+# --stringency 6 - Minimum overlap for adapter trimming
 # --length 50 - Minimum read length to keep
 trim_galore \
     --quality 0  \
