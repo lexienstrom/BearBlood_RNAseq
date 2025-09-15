@@ -1,10 +1,9 @@
-# Trimming reads
+# 1. Trimming reads
 
 Trim raw reads with TrimGalore
 - Fastqc of raw fastq files shows high primer contamination
 - bearBlood_RNAseq_samples.tsv is a tab delimited with with the fastq name in column 1 and the path to the fastq file in column 2
 
-## 1. Trimming method 1 - setting quality to zero to run trimgalore
 
 Based on https://github.com/jokelley/H2Sexposure-expression/blob/master/linux_scripts.txt
 
@@ -50,4 +49,46 @@ trim_galore \
     --length 50 \
     --output_dir 1_trim/trim_q0_q24 \
     1_trim/trim_q0/"${fastq}_trimmed.fq.gz"
+```
+# 2. Mapping reads to ref genome
+Use STAR aligner to map to brown bear genome (GCA_023065955.2)[https://www.ncbi.nlm.nih.gov/datasets/genome/GCF_023065955.2/]
+- Keep only uniquely mapped reads
+- Convert to sorted BAM
+
+```bash
+# Load necessary modules
+module load star
+
+# Change to working directory
+cd /hb/groups/kelley_training/lexi/BearBlood_RNAseq || exit 1
+
+# Create output directory for STAR mapped files
+mkdir -p 2_STAR/mapped
+
+# Read the sample information from the TSV file based on SLURM_ARRAY_TASK_ID
+# Each line in bearBlood_RNAseq_samples.tsv should have two columns: sample_name and full_path_to_fastq
+LINE=$(sed -n "${SLURM_ARRAY_TASK_ID}p" bearBlood_RNAseq_samples.tsv)
+fastq=$(echo "${LINE}" | awk '{print $1}')
+
+# Run STAR
+# max read length is ~331, so sjdbOverhang should be set to 330 (max read length - 1)
+# indexed genome using:
+# STAR --runMode genomeGenerate \
+#    --runThreadN 12 \
+#    --genomeDir indexed_genome \
+#    --genomeFastaFiles "${fastaFile}" \
+#    --sjdbGTFfile "${gtfFile}" \
+#    --sjdbOverhang 330
+
+STAR \
+    --runThreadN 4 \
+    --genomeDir 2_STAR/indexed_genome \
+    --sjdbGTFfile /hb/home/aenstrom/ursus_arctos_genome/GCF_023065955.2_UrsArc2.0_genomic.gtf \
+    --sjdbOverhang 330 \
+    --outFilterMultimapNmax 1 \
+    --twopassMode Basic \
+    --readFilesIn 1_trim/trim_31/"${fastq}_trimmed_trimmed.fq.gz" \
+    --readFilesCommand zcat \
+    --outFileNamePrefix 2_STAR/mapped/"${fastq}_" \
+    --outSAMtype BAM SortedByCoordinate
 ```
