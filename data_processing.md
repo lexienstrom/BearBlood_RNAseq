@@ -104,10 +104,18 @@ mkdir -p 3_featureCounts
 
 # Run featureCounts
 # Quanitfy gene-level read counts
+# -F 'GTF' specifies the annotation file format
+# -t exon specifies to count reads overlapping exons
+# -g gene_id specifies to group counts by gene_id attribute in the GTF file
+# -G specifies the reference genome fasta file
+# -a specifies the annotation GTF file
+# -o specifies the output file for the counts
+# 2_STAR/mapped/*_Aligned.sortedByCoord.out.bam specifies the input BAM files
+
 featureCounts -F 'GTF' -T 4 -t exon -g gene_id \
     -G /hb/home/aenstrom/ursus_arctos_genome/GCF_023065955.2_UrsArc2.0_genomic.fna \
     -a /hb/home/aenstrom/ursus_arctos_genome/GCF_023065955.2_UrsArc2.0_genomic.gtf \
-    -o 3_featureCounts/brownBear_Blood_RNAseq_featureCounts_output.txt \
+    -o 3_featureCounts/brownBear_Blood_RNAseq_rawCounts_q0_09.16.2025.txt \
     2_STAR/mapped/*_Aligned.sortedByCoord.out.bam
 ```
 Etc
