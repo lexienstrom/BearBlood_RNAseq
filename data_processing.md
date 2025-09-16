@@ -110,3 +110,4 @@ featureCounts -F 'GTF' -T 4 -t exon -g gene_id \
     -o 3_featureCounts/brownBear_Blood_RNAseq_featureCounts_output.txt \
     2_STAR/mapped/*_Aligned.sortedByCoord.out.bam
 ```
+Etc
